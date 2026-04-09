@@ -36,7 +36,7 @@ public static class Round
         GlobalCurrentRound = round;
         GlobalNextRound = null;
 
-        if (round.NoBuy is true)
+        if (round.NoBuy == true)
         {
             Library.SetBuyzoneInput("Disable");
         }

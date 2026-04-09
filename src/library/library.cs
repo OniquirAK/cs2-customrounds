@@ -22,7 +22,7 @@ public static class Library
         {
             CCSPlayerController? player = Utilities.GetEntityFromIndex<CCSPlayerController>(i + 1);
 
-            if (player?.IsValid is not true || player.IsBot || player.DesignerName != playerdesignername)
+            if (player?.IsValid != true || player.IsBot || player.DesignerName != playerdesignername)
             {
                 continue;
             }
@@ -39,7 +39,7 @@ public static class Library
 
             foreach (string weapon in Round.GlobalCurrentRound.Weapons)
             {
-                if (weapon.Contains("knife") && Round.GlobalCurrentRound.KnifeDamage is not true)
+                if (weapon.Contains("knife") && Round.GlobalCurrentRound.KnifeDamage != true)
                 {
                     continue;
                 }

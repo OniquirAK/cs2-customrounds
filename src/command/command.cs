@@ -98,7 +98,7 @@ public static class Command
             return;
         }
 
-        Server.NextFrame(() =>
+        Server.NextFrameAsync(() =>
         {
             foreach (RoundInfo round in Instance.Config.Rounds.Values)
             {

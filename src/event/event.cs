@@ -46,15 +46,15 @@ public static class Event
         Instance.RegisterEventHandler<EventPlayerDeath>(OnPlayerDeath);
 
         Instance.RegisterListener<OnTick>(OnTick);
+        Instance.RegisterListener<OnPlayerTakeDamagePre>(OnTakeDamage);
 
-        VirtualFunctions.CBaseEntity_TakeDamageOldFunc.Hook(OnTakeDamage, HookMode.Pre);
         VirtualFunctions.CCSPlayer_ItemServices_CanAcquireFunc.Hook(OnWeaponCanAcquire, HookMode.Pre);
     }
 
     public static void Unload()
     {
         Instance.RemoveListener<OnTick>(OnTick);
-        VirtualFunctions.CBaseEntity_TakeDamageOldFunc.Unhook(OnTakeDamage, HookMode.Pre);
+        Instance.RemoveListener<OnPlayerTakeDamagePre>(OnTakeDamage);
         VirtualFunctions.CCSPlayer_ItemServices_CanAcquireFunc.Unhook(OnWeaponCanAcquire, HookMode.Pre);
     }
 
@@ -69,7 +69,7 @@ public static class Event
         {
             CCSPlayerController? player = Utilities.GetEntityFromIndex<CCSPlayerController>(i + 1);
 
-            if (player?.IsValid is not true || player.IsBot || player.DesignerName != Library.playerdesignername)
+            if (player?.IsValid != true || player.IsBot || player.DesignerName != Library.playerdesignername)
             {
                 continue;
             }
@@ -119,26 +119,22 @@ public static class Event
         return HookResult.Stop;
     }
 
-    public static HookResult OnTakeDamage(DynamicHook hook)
+    public static HookResult OnTakeDamage(CCSPlayerPawn player, CTakeDamageInfo info)
     {
         if (GlobalCurrentRound == null)
         {
             return HookResult.Continue;
         }
 
-        CTakeDamageInfo info = hook.GetParam<CTakeDamageInfo>(1);
+        bool IsKnife = info.Ability.Value?.DesignerName.Contains("knife") == true;
 
-        bool IsKnife = info.Ability.Value?.DesignerName.Contains("knife") is true;
-
-        if (GlobalCurrentRound.KnifeDamage is not true && IsKnife)
+        if (GlobalCurrentRound.KnifeDamage != true && IsKnife)
         {
-            hook.SetReturn(false);
             return HookResult.Handled;
         }
 
-        if (GlobalCurrentRound.OnlyHeadshot is true && info.GetHitGroup() != HitGroup_t.HITGROUP_HEAD && !IsKnife)
+        if (GlobalCurrentRound.OnlyHeadshot == true && info.GetHitGroup() != HitGroup_t.HITGROUP_HEAD && !IsKnife)
         {
-            hook.SetReturn(false);
             return HookResult.Handled;
         }
 
@@ -195,7 +191,7 @@ public static class Event
                 playerPawn.SetKevlar(kevlar);
             }
 
-            if (GlobalCurrentRound.Helmet is bool helmetv is true)
+            if (GlobalCurrentRound.Helmet is bool helmetv == true)
             {
                 playerPawn.GiveHelmet();
             }
@@ -263,7 +259,7 @@ public static class Event
 
     public static HookResult OnWeaponFire(EventWeaponFire @event, GameEventInfo info)
     {
-        if (GlobalCurrentRound == null || GlobalCurrentRound.UnlimitedAmmo is not true)
+        if (GlobalCurrentRound == null || GlobalCurrentRound.UnlimitedAmmo != true)
         {
             return HookResult.Continue;
         }
@@ -318,7 +314,7 @@ public static class Event
             }
         }
 
-        if (GlobalCurrentRound.TPOnKill is true && killer != null && victim != null && killer != victim)
+        if (GlobalCurrentRound.TPOnKill == true && killer != null && victim != null && killer != victim)
         {
             var victimPos = victim.PlayerPawn.Value?.AbsOrigin;
             if (victimPos != null)
@@ -335,7 +331,7 @@ public static class Event
 
     public static void OnTick_NoScope(CCSPlayerController player)
     {
-        if (GlobalCurrentRound!.NoScope is not true)
+        if (GlobalCurrentRound!.NoScope != true)
         {
             return;
         }

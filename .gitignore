@@ -5,3 +5,4 @@ obj/
 
 # Ignore everything in BuildOutput directory
 BuildOutput/
+cs2-customrounds.sln
