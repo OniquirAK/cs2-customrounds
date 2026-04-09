@@ -47,17 +47,17 @@ public static class Library
                 builder.Append(Instance.Localizer["html_png", weapon.Replace("weapon_", "")]);
             }
 
-            if (Round.GlobalCurrentRound.NoScope is true)
+            if (Round.GlobalCurrentRound.NoScope == true)
             {
                 builder.Append(Instance.Localizer["html_png", "noscope"]);
             }
 
-            if (Round.GlobalCurrentRound.OnlyHeadshot is true)
+            if (Round.GlobalCurrentRound.OnlyHeadshot == true)
             {
                 builder.Append(Instance.Localizer["html_png", "headshot"]);
             }
 
-            if (Round.GlobalCurrentRound.TPOnKill is true)
+            if (Round.GlobalCurrentRound.TPOnKill == true)
             {
                 builder.Append(Instance.Localizer["html_png", "tponkill"]); // prob needs a better tponkill image
             }

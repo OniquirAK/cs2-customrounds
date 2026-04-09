@@ -11,6 +11,7 @@ on:
 
 jobs:
   setup:
+    if: "!contains(github.event.head_commit.message, '[no ci]')"
     permissions:
       contents: write
     runs-on: ubuntu-latest
@@ -24,6 +25,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
   build:
+    if: "!contains(github.event.head_commit.message, '[no ci]')"
     needs: setup
     runs-on: ubuntu-latest
     permissions:
