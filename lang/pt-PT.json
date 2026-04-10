@@ -1,0 +1,14 @@
+{
+  "No access": "{white}Não tens permissão para utilizar este comando.",
+  "You cannot use this weapon": "Não podes utilizar esta arma => {0}",
+
+  "Admin set round": "{blue}{0}{white} definiu a próxima ronda para {green}{1}{white}.",
+  "Admin set inf round": "{blue}{0}{white} definiu a próxima ronda para {green}{1}{white}. Vai ser jogada até ser interrompida.",
+  "Admin reset round": "{blue}{0}{white}, reiniciou a ronda.",
+  "Admin start vote": "{blue}{0}{white}, começou a votacão da próxima ronda.",
+
+  "Next round is": "{white}A próxima ronda foi definida para {green}{0} {white}.",
+
+  "html_customround": "<center><font color='red'>{0}<br><b color='white'>━━━━━━━━━━━━━━━━━━━━━━━━<</b></center><br>",
+  "html_png": "<img src='https://raw.githubusercontent.com/OniquirAK/cs2-customrounds/main/img/{0}.png'></img>"
+}
