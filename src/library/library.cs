@@ -4,12 +4,14 @@ using CounterStrikeSharp.API.Core;
 using CounterStrikeSharp.API.Core.Translations;
 using CounterStrikeSharp.API.Modules.Utils;
 using static CustomRounds.CustomRounds;
+using System.Drawing;
 
 namespace CustomRounds;
 
 public static class Library
 {
     public const string playerdesignername = "cs_player_controller";
+    public static readonly Dictionary<CDynamicProp, CDynamicProp> GlowEnt = new();
 
     public static void SendMessageToPlayer(CCSPlayerController player, string messageKey, params object[] args)
     {
@@ -60,6 +62,11 @@ public static class Library
             if (Round.GlobalCurrentRound.TPOnKill == true)
             {
                 builder.Append(Instance.Localizer["html_png", "tponkill"]); // prob needs a better tponkill image
+            }
+
+            if (Round.GlobalCurrentRound.Wallhack == true)
+            {
+                builder.Append(Instance.Localizer["html_png", "wallhack"]); // same as above, needs a better image
             }
 
             player.PrintToCenterHtml(builder.ToString());
@@ -177,5 +184,65 @@ public static class Library
         {
             player.GiveNamedItem(weapon);
         }
+    }
+
+    public static void CreateGlow (CCSPlayerController player)
+    {
+        var pawn = player.PlayerPawn.Value;
+        if (pawn == null || !pawn.IsValid) return;
+
+        string? modelName = pawn.CBodyComponent?.SceneNode?.GetSkeletonInstance().ModelState.ModelName;
+        if (string.IsNullOrEmpty(modelName)) return;
+
+        var relay = Utilities.CreateEntityByName<CDynamicProp>("prop_dynamic")!;
+        relay.DispatchSpawn();
+        relay.SetModel(modelName);
+        relay.Spawnflags = 256u;
+        relay.RenderMode = RenderMode_t.kRenderNone;
+
+        var glow = Utilities.CreateEntityByName<CDynamicProp>("prop_dynamic")!;
+        glow.Render = Color.FromArgb(1, 0, 0, 0);
+        glow.DispatchSpawn();
+        glow.SetModel(modelName);
+        glow.Spawnflags = 256u;
+
+        glow.Glow.GlowColorOverride = pawn.TeamNum == (byte)CsTeam.CounterTerrorist
+            ? Color.Cyan
+            : Color.Red;
+
+        glow.Glow.GlowRange = 3000;
+        glow.Glow.GlowTeam = -1;
+        glow.Glow.GlowType = 3;
+        glow.Glow.GlowRangeMin = 100;
+
+        Server.NextWorldUpdateAsync (() =>
+        {
+            relay.AcceptInput("FollowEntity", pawn, relay, "!activator");
+            glow.AcceptInput("FollowEntity", relay, glow, "!activator");
+        });
+
+        GlowEnt.Add(relay, glow);
+    }
+    public static void ApplyGlowToAllPlayers()
+    {
+        List<CCSPlayerController> players = Utilities.GetPlayers();
+
+        foreach (CCSPlayerController player in players)
+        {
+            CreateGlow(player);
+        }
+    }
+
+    public static void RemoveGlow()
+    {
+        foreach (CDynamicProp prop in GlowEnt.Values)
+        {
+            if (prop.IsValid) 
+            {
+                prop.Remove();
+            }
+        }
+
+        GlowEnt.Clear();
     }
 }
