@@ -316,6 +316,10 @@ public static class Event
 
             if (players.Count == 2 && players[0].Team != players[1].Team)
             {
+                if (GlobalCurrentRound.Wallhack == true)
+                {
+                    Library.RemoveGlow();
+                }
                 Reset(false);
                 return HookResult.Continue;
             }
