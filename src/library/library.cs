@@ -237,7 +237,7 @@ public static class Library
     {
         foreach (CDynamicProp prop in GlowEnt.Values)
         {
-            if (prop.IsValid) 
+            if (prop.IsValid && prop != null) 
             {
                 prop.Remove();
             }
