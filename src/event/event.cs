@@ -1,3 +1,4 @@
+using System.Net.Security;
 using CounterStrikeSharp.API;
 using CounterStrikeSharp.API.Core;
 using CounterStrikeSharp.API.Core.Translations;
@@ -212,6 +213,11 @@ public static class Event
             return HookResult.Continue;
         }
 
+        if (GlobalCurrentRound?.Wallhack == true)
+        {
+            Library.ApplyGlowToAllPlayers();
+        }
+
         float htmlTime = Instance.Config.HtmlDisplayTime;
         GlobalHtmlDisplayTime = htmlTime == -1 ? -1 : Server.CurrentTime + htmlTime;
 
@@ -220,6 +226,8 @@ public static class Event
 
     public static HookResult OnRoundEnd(EventRoundEnd @event, GameEventInfo info)
     {
+        Library.RemoveGlow();
+
         if (GlobalRoundCount == -1)
         {
             return HookResult.Continue;
@@ -309,6 +317,10 @@ public static class Event
 
             if (players.Count == 2 && players[0].Team != players[1].Team)
             {
+                if (GlobalCurrentRound.Wallhack == true)
+                {
+                    Library.RemoveGlow();
+                }
                 Reset(false);
                 return HookResult.Continue;
             }

@@ -180,6 +180,20 @@
       "OnlyHeadshot": true,
       "TPOnKill": true,
       "CenterMsg": "html_customround"
+    },
+    "14": {
+      "Name": "[Only HS + TP & Wallhack] SSG08",
+      "Weapons": [
+        "weapon_knife",
+        "weapon_ssg08"
+      ],
+      "Shortcut": "ssgwh",
+      "UnlimitedAmmo": false,
+      "NoBuy": true,
+      "OnlyHeadshot": true,
+      "TPOnKill": true,
+      "Wallhack": true,
+      "CenterMsg": "html_customround"
     }
   },
   "ConfigVersion": 1

@@ -23,6 +23,7 @@ public static class Round
         public int? MaxHealth { get; set; }
         public float? Speed { get; set; }
         public string? Cmd { get; set; }
+        public bool? Wallhack { get; set; }
         public string? CenterMsg { get; set; } = "html_customround";
     }
 
